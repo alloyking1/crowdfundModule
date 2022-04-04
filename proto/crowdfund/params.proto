@@ -1,0 +1,12 @@
+syntax = "proto3";
+package cosmonaut.crowdfund.crowdfund;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/cosmonaut/crowdfund/x/crowdfund/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}

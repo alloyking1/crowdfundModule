@@ -1,0 +1,16 @@
+syntax = "proto3";
+package cosmonaut.crowdfund.crowdfund;
+
+option go_package = "github.com/cosmonaut/crowdfund/x/crowdfund/types";
+
+message Crowdfund {
+  uint64 id = 1;
+  string total = 2; 
+  string amount = 3;
+  string fee = 4; 
+  string deadline = 5; 
+  string state = 6; 
+  string owner = 7; 
+  map<string, string> pledger = 8; 
+  
+}

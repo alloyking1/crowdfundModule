@@ -1,0 +1,27 @@
+syntax = "proto3";
+package cosmonaut.crowdfund.crowdfund;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/cosmonaut/crowdfund/x/crowdfund/types";
+
+// Msg defines the Msg service.
+service Msg {
+      rpc LaunchCampaing(MsgLaunchCampaing) returns (MsgLaunchCampaingResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgLaunchCampaing {
+  string creator = 1;
+  string total = 2;
+  string amount = 3;
+  string deadline = 4;
+  string fee = 5;
+  string owner = 6;
+  string state = 7;
+}
+
+message MsgLaunchCampaingResponse {
+}
+
+// this line is used by starport scaffolding # proto/tx/message
