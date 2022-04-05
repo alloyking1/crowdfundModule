@@ -10,6 +10,7 @@ service Msg {
       rpc LaunchCampaing(MsgLaunchCampaing) returns (MsgLaunchCampaingResponse);
   rpc PledgeToken(MsgPledgeToken) returns (MsgPledgeTokenResponse);
   rpc ClaimToken(MsgClaimToken) returns (MsgClaimTokenResponse);
+  rpc WithdrawPledge(MsgWithdrawPledge) returns (MsgWithdrawPledgeResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -41,6 +42,14 @@ message MsgClaimToken {
 }
 
 message MsgClaimTokenResponse {
+}
+
+message MsgWithdrawPledge {
+  string creator = 1;
+  uint64 id = 2;
+}
+
+message MsgWithdrawPledgeResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message

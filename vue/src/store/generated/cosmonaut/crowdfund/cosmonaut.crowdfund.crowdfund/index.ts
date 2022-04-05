@@ -216,6 +216,21 @@ export default {
 				}
 			}
 		},
+		async sendMsgPledgeToken({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgPledgeToken(value)
+				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
+	gas: "200000" }, memo})
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new SpVuexError('TxClient:MsgPledgeToken:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgPledgeToken:Send', 'Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgClaimToken({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -231,18 +246,18 @@ export default {
 				}
 			}
 		},
-		async sendMsgPledgeToken({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgWithdrawPledge({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgPledgeToken(value)
+				const msg = await txClient.msgWithdrawPledge(value)
 				const result = await txClient.signAndBroadcast([msg], {fee: { amount: fee, 
 	gas: "200000" }, memo})
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgPledgeToken:Init', 'Could not initialize signing client. Wallet is required.')
+					throw new SpVuexError('TxClient:MsgWithdrawPledge:Init', 'Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new SpVuexError('TxClient:MsgPledgeToken:Send', 'Could not broadcast Tx: '+ e.message)
+					throw new SpVuexError('TxClient:MsgWithdrawPledge:Send', 'Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -261,6 +276,20 @@ export default {
 				}
 			}
 		},
+		async MsgPledgeToken({ rootGetters }, { value }) {
+			try {
+				const txClient=await initTxClient(rootGetters)
+				const msg = await txClient.msgPledgeToken(value)
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new SpVuexError('TxClient:MsgPledgeToken:Init', 'Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new SpVuexError('TxClient:MsgPledgeToken:Create', 'Could not create message: ' + e.message)
+					
+				}
+			}
+		},
 		async MsgClaimToken({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
@@ -275,16 +304,16 @@ export default {
 				}
 			}
 		},
-		async MsgPledgeToken({ rootGetters }, { value }) {
+		async MsgWithdrawPledge({ rootGetters }, { value }) {
 			try {
 				const txClient=await initTxClient(rootGetters)
-				const msg = await txClient.msgPledgeToken(value)
+				const msg = await txClient.msgWithdrawPledge(value)
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new SpVuexError('TxClient:MsgPledgeToken:Init', 'Could not initialize signing client. Wallet is required.')
+					throw new SpVuexError('TxClient:MsgWithdrawPledge:Init', 'Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new SpVuexError('TxClient:MsgPledgeToken:Create', 'Could not create message: ' + e.message)
+					throw new SpVuexError('TxClient:MsgWithdrawPledge:Create', 'Could not create message: ' + e.message)
 					
 				}
 			}

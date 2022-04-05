@@ -24,6 +24,12 @@ export interface MsgClaimToken {
 }
 export interface MsgClaimTokenResponse {
 }
+export interface MsgWithdrawPledge {
+    creator: string;
+    id: number;
+}
+export interface MsgWithdrawPledgeResponse {
+}
 export declare const MsgLaunchCampaing: {
     encode(message: MsgLaunchCampaing, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgLaunchCampaing;
@@ -66,12 +72,27 @@ export declare const MsgClaimTokenResponse: {
     toJSON(_: MsgClaimTokenResponse): unknown;
     fromPartial(_: DeepPartial<MsgClaimTokenResponse>): MsgClaimTokenResponse;
 };
+export declare const MsgWithdrawPledge: {
+    encode(message: MsgWithdrawPledge, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgWithdrawPledge;
+    fromJSON(object: any): MsgWithdrawPledge;
+    toJSON(message: MsgWithdrawPledge): unknown;
+    fromPartial(object: DeepPartial<MsgWithdrawPledge>): MsgWithdrawPledge;
+};
+export declare const MsgWithdrawPledgeResponse: {
+    encode(_: MsgWithdrawPledgeResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgWithdrawPledgeResponse;
+    fromJSON(_: any): MsgWithdrawPledgeResponse;
+    toJSON(_: MsgWithdrawPledgeResponse): unknown;
+    fromPartial(_: DeepPartial<MsgWithdrawPledgeResponse>): MsgWithdrawPledgeResponse;
+};
 /** Msg defines the Msg service. */
 export interface Msg {
     LaunchCampaing(request: MsgLaunchCampaing): Promise<MsgLaunchCampaingResponse>;
     PledgeToken(request: MsgPledgeToken): Promise<MsgPledgeTokenResponse>;
-    /** this line is used by starport scaffolding # proto/tx/rpc */
     ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse>;
+    /** this line is used by starport scaffolding # proto/tx/rpc */
+    WithdrawPledge(request: MsgWithdrawPledge): Promise<MsgWithdrawPledgeResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
@@ -79,6 +100,7 @@ export declare class MsgClientImpl implements Msg {
     LaunchCampaing(request: MsgLaunchCampaing): Promise<MsgLaunchCampaingResponse>;
     PledgeToken(request: MsgPledgeToken): Promise<MsgPledgeTokenResponse>;
     ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse>;
+    WithdrawPledge(request: MsgWithdrawPledge): Promise<MsgWithdrawPledgeResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

@@ -12,6 +12,7 @@ export interface CrowdfundCrowdfund {
 export declare type CrowdfundMsgClaimTokenResponse = object;
 export declare type CrowdfundMsgLaunchCampaingResponse = object;
 export declare type CrowdfundMsgPledgeTokenResponse = object;
+export declare type CrowdfundMsgWithdrawPledgeResponse = object;
 /**
  * Params defines the parameters for the module.
  */
