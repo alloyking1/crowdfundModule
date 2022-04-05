@@ -10,4 +10,5 @@ import (
 var (
 	ErrSample              = sdkerrors.Register(ModuleName, 1100, "sample error")
 	ErrWrongCrowdfundState = sdkerrors.Register(ModuleName, 1, "wrong campaing state")
+	ErrDeadline            = sdkerrors.Register(ModuleName, 2, "deadline")
 )
