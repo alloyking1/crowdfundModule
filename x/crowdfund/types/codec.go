@@ -12,6 +12,7 @@ func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgPledgeToken{}, "crowdfund/PledgeToken", nil)
 	cdc.RegisterConcrete(&MsgClaimToken{}, "crowdfund/ClaimToken", nil)
 	cdc.RegisterConcrete(&MsgWithdrawPledge{}, "crowdfund/WithdrawPledge", nil)
+	cdc.RegisterConcrete(&MsgCancelCampaign{}, "crowdfund/CancelCampaign", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -27,6 +28,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	)
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgWithdrawPledge{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgCancelCampaign{},
 	)
 	// this line is used by starport scaffolding # 3
 

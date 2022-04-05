@@ -38,6 +38,13 @@ export interface MsgWithdrawPledge {
 
 export interface MsgWithdrawPledgeResponse {}
 
+export interface MsgCancelCampaign {
+  creator: string;
+  id: number;
+}
+
+export interface MsgCancelCampaignResponse {}
+
 const baseMsgLaunchCampaing: object = {
   creator: "",
   total: "",
@@ -616,6 +623,130 @@ export const MsgWithdrawPledgeResponse = {
   },
 };
 
+const baseMsgCancelCampaign: object = { creator: "", id: 0 };
+
+export const MsgCancelCampaign = {
+  encode(message: MsgCancelCampaign, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgCancelCampaign {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgCancelCampaign } as MsgCancelCampaign;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCancelCampaign {
+    const message = { ...baseMsgCancelCampaign } as MsgCancelCampaign;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = Number(object.id);
+    } else {
+      message.id = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgCancelCampaign): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgCancelCampaign>): MsgCancelCampaign {
+    const message = { ...baseMsgCancelCampaign } as MsgCancelCampaign;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id;
+    } else {
+      message.id = 0;
+    }
+    return message;
+  },
+};
+
+const baseMsgCancelCampaignResponse: object = {};
+
+export const MsgCancelCampaignResponse = {
+  encode(
+    _: MsgCancelCampaignResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    return writer;
+  },
+
+  decode(
+    input: Reader | Uint8Array,
+    length?: number
+  ): MsgCancelCampaignResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseMsgCancelCampaignResponse,
+    } as MsgCancelCampaignResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgCancelCampaignResponse {
+    const message = {
+      ...baseMsgCancelCampaignResponse,
+    } as MsgCancelCampaignResponse;
+    return message;
+  },
+
+  toJSON(_: MsgCancelCampaignResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(
+    _: DeepPartial<MsgCancelCampaignResponse>
+  ): MsgCancelCampaignResponse {
+    const message = {
+      ...baseMsgCancelCampaignResponse,
+    } as MsgCancelCampaignResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   LaunchCampaing(
@@ -623,10 +754,13 @@ export interface Msg {
   ): Promise<MsgLaunchCampaingResponse>;
   PledgeToken(request: MsgPledgeToken): Promise<MsgPledgeTokenResponse>;
   ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   WithdrawPledge(
     request: MsgWithdrawPledge
   ): Promise<MsgWithdrawPledgeResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  CancelCampaign(
+    request: MsgCancelCampaign
+  ): Promise<MsgCancelCampaignResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -683,6 +817,20 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgWithdrawPledgeResponse.decode(new Reader(data))
+    );
+  }
+
+  CancelCampaign(
+    request: MsgCancelCampaign
+  ): Promise<MsgCancelCampaignResponse> {
+    const data = MsgCancelCampaign.encode(request).finish();
+    const promise = this.rpc.request(
+      "cosmonaut.crowdfund.crowdfund.Msg",
+      "CancelCampaign",
+      data
+    );
+    return promise.then((data) =>
+      MsgCancelCampaignResponse.decode(new Reader(data))
     );
   }
 }

@@ -30,6 +30,12 @@ export interface MsgWithdrawPledge {
 }
 export interface MsgWithdrawPledgeResponse {
 }
+export interface MsgCancelCampaign {
+    creator: string;
+    id: number;
+}
+export interface MsgCancelCampaignResponse {
+}
 export declare const MsgLaunchCampaing: {
     encode(message: MsgLaunchCampaing, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgLaunchCampaing;
@@ -86,13 +92,28 @@ export declare const MsgWithdrawPledgeResponse: {
     toJSON(_: MsgWithdrawPledgeResponse): unknown;
     fromPartial(_: DeepPartial<MsgWithdrawPledgeResponse>): MsgWithdrawPledgeResponse;
 };
+export declare const MsgCancelCampaign: {
+    encode(message: MsgCancelCampaign, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCancelCampaign;
+    fromJSON(object: any): MsgCancelCampaign;
+    toJSON(message: MsgCancelCampaign): unknown;
+    fromPartial(object: DeepPartial<MsgCancelCampaign>): MsgCancelCampaign;
+};
+export declare const MsgCancelCampaignResponse: {
+    encode(_: MsgCancelCampaignResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgCancelCampaignResponse;
+    fromJSON(_: any): MsgCancelCampaignResponse;
+    toJSON(_: MsgCancelCampaignResponse): unknown;
+    fromPartial(_: DeepPartial<MsgCancelCampaignResponse>): MsgCancelCampaignResponse;
+};
 /** Msg defines the Msg service. */
 export interface Msg {
     LaunchCampaing(request: MsgLaunchCampaing): Promise<MsgLaunchCampaingResponse>;
     PledgeToken(request: MsgPledgeToken): Promise<MsgPledgeTokenResponse>;
     ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse>;
-    /** this line is used by starport scaffolding # proto/tx/rpc */
     WithdrawPledge(request: MsgWithdrawPledge): Promise<MsgWithdrawPledgeResponse>;
+    /** this line is used by starport scaffolding # proto/tx/rpc */
+    CancelCampaign(request: MsgCancelCampaign): Promise<MsgCancelCampaignResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
@@ -101,6 +122,7 @@ export declare class MsgClientImpl implements Msg {
     PledgeToken(request: MsgPledgeToken): Promise<MsgPledgeTokenResponse>;
     ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse>;
     WithdrawPledge(request: MsgWithdrawPledge): Promise<MsgWithdrawPledgeResponse>;
+    CancelCampaign(request: MsgCancelCampaign): Promise<MsgCancelCampaignResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
