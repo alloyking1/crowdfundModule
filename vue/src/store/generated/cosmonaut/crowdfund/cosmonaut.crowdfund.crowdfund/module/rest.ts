@@ -23,6 +23,8 @@ export interface CrowdfundCrowdfund {
 
 export type CrowdfundMsgLaunchCampaingResponse = object;
 
+export type CrowdfundMsgPledgeTokenResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */

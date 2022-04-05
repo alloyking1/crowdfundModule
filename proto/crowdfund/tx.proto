@@ -8,6 +8,7 @@ option go_package = "github.com/cosmonaut/crowdfund/x/crowdfund/types";
 // Msg defines the Msg service.
 service Msg {
       rpc LaunchCampaing(MsgLaunchCampaing) returns (MsgLaunchCampaingResponse);
+  rpc PledgeToken(MsgPledgeToken) returns (MsgPledgeTokenResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -22,6 +23,15 @@ message MsgLaunchCampaing {
 }
 
 message MsgLaunchCampaingResponse {
+}
+
+message MsgPledgeToken {
+  string creator = 1;
+  uint64 id = 2;
+  string amount = 3;
+}
+
+message MsgPledgeTokenResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
