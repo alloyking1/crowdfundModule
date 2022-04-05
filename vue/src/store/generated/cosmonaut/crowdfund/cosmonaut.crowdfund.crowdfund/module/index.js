@@ -3,8 +3,10 @@ import { SigningStargateClient } from "@cosmjs/stargate";
 import { Registry } from "@cosmjs/proto-signing";
 import { Api } from "./rest";
 import { MsgLaunchCampaing } from "./types/crowdfund/tx";
+import { MsgPledgeToken } from "./types/crowdfund/tx";
 const types = [
     ["/cosmonaut.crowdfund.crowdfund.MsgLaunchCampaing", MsgLaunchCampaing],
+    ["/cosmonaut.crowdfund.crowdfund.MsgPledgeToken", MsgPledgeToken],
 ];
 export const MissingWalletError = new Error("wallet is required");
 export const registry = new Registry(types);
@@ -26,6 +28,7 @@ const txClient = async (wallet, { addr: addr } = { addr: "http://localhost:26657
     return {
         signAndBroadcast: (msgs, { fee, memo } = { fee: defaultFee, memo: "" }) => client.signAndBroadcast(address, msgs, fee, memo),
         msgLaunchCampaing: (data) => ({ typeUrl: "/cosmonaut.crowdfund.crowdfund.MsgLaunchCampaing", value: MsgLaunchCampaing.fromPartial(data) }),
+        msgPledgeToken: (data) => ({ typeUrl: "/cosmonaut.crowdfund.crowdfund.MsgPledgeToken", value: MsgPledgeToken.fromPartial(data) }),
     };
 };
 const queryClient = async ({ addr: addr } = { addr: "http://localhost:1317" }) => {

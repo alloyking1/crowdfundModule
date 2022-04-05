@@ -9,12 +9,16 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgLaunchCampaing{}, "crowdfund/LaunchCampaing", nil)
+	cdc.RegisterConcrete(&MsgPledgeToken{}, "crowdfund/PledgeToken", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgLaunchCampaing{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgPledgeToken{},
 	)
 	// this line is used by starport scaffolding # 3
 

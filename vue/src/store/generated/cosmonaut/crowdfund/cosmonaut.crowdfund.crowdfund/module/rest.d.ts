@@ -10,6 +10,7 @@ export interface CrowdfundCrowdfund {
     pledger?: Record<string, string>;
 }
 export declare type CrowdfundMsgLaunchCampaingResponse = object;
+export declare type CrowdfundMsgPledgeTokenResponse = object;
 /**
  * Params defines the parameters for the module.
  */
