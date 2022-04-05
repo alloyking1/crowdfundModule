@@ -12835,6 +12835,8 @@ definitions:
     type: object
   cosmonaut.crowdfund.crowdfund.MsgPledgeTokenResponse:
     type: object
+  cosmonaut.crowdfund.crowdfund.MsgWithdrawPledgeResponse:
+    type: object
   cosmonaut.crowdfund.crowdfund.Params:
     type: object
     description: Params defines the parameters for the module.

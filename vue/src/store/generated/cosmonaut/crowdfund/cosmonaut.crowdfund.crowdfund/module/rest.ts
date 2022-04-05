@@ -27,6 +27,8 @@ export type CrowdfundMsgLaunchCampaingResponse = object;
 
 export type CrowdfundMsgPledgeTokenResponse = object;
 
+export type CrowdfundMsgWithdrawPledgeResponse = object;
+
 /**
  * Params defines the parameters for the module.
  */
