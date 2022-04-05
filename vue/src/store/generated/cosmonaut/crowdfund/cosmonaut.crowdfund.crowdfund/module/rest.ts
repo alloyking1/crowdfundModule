@@ -21,6 +21,8 @@ export interface CrowdfundCrowdfund {
   pledger?: Record<string, string>;
 }
 
+export type CrowdfundMsgClaimTokenResponse = object;
+
 export type CrowdfundMsgLaunchCampaingResponse = object;
 
 export type CrowdfundMsgPledgeTokenResponse = object;

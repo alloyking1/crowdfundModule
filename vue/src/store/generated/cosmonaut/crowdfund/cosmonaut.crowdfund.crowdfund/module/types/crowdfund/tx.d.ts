@@ -18,6 +18,12 @@ export interface MsgPledgeToken {
 }
 export interface MsgPledgeTokenResponse {
 }
+export interface MsgClaimToken {
+    creator: string;
+    id: number;
+}
+export interface MsgClaimTokenResponse {
+}
 export declare const MsgLaunchCampaing: {
     encode(message: MsgLaunchCampaing, writer?: Writer): Writer;
     decode(input: Reader | Uint8Array, length?: number): MsgLaunchCampaing;
@@ -46,17 +52,33 @@ export declare const MsgPledgeTokenResponse: {
     toJSON(_: MsgPledgeTokenResponse): unknown;
     fromPartial(_: DeepPartial<MsgPledgeTokenResponse>): MsgPledgeTokenResponse;
 };
+export declare const MsgClaimToken: {
+    encode(message: MsgClaimToken, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgClaimToken;
+    fromJSON(object: any): MsgClaimToken;
+    toJSON(message: MsgClaimToken): unknown;
+    fromPartial(object: DeepPartial<MsgClaimToken>): MsgClaimToken;
+};
+export declare const MsgClaimTokenResponse: {
+    encode(_: MsgClaimTokenResponse, writer?: Writer): Writer;
+    decode(input: Reader | Uint8Array, length?: number): MsgClaimTokenResponse;
+    fromJSON(_: any): MsgClaimTokenResponse;
+    toJSON(_: MsgClaimTokenResponse): unknown;
+    fromPartial(_: DeepPartial<MsgClaimTokenResponse>): MsgClaimTokenResponse;
+};
 /** Msg defines the Msg service. */
 export interface Msg {
     LaunchCampaing(request: MsgLaunchCampaing): Promise<MsgLaunchCampaingResponse>;
-    /** this line is used by starport scaffolding # proto/tx/rpc */
     PledgeToken(request: MsgPledgeToken): Promise<MsgPledgeTokenResponse>;
+    /** this line is used by starport scaffolding # proto/tx/rpc */
+    ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse>;
 }
 export declare class MsgClientImpl implements Msg {
     private readonly rpc;
     constructor(rpc: Rpc);
     LaunchCampaing(request: MsgLaunchCampaing): Promise<MsgLaunchCampaingResponse>;
     PledgeToken(request: MsgPledgeToken): Promise<MsgPledgeTokenResponse>;
+    ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse>;
 }
 interface Rpc {
     request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;

@@ -9,6 +9,7 @@ export interface CrowdfundCrowdfund {
     owner?: string;
     pledger?: Record<string, string>;
 }
+export declare type CrowdfundMsgClaimTokenResponse = object;
 export declare type CrowdfundMsgLaunchCampaingResponse = object;
 export declare type CrowdfundMsgPledgeTokenResponse = object;
 /**

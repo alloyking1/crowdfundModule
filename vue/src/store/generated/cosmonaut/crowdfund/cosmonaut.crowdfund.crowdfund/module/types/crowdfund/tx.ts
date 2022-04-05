@@ -24,6 +24,13 @@ export interface MsgPledgeToken {
 
 export interface MsgPledgeTokenResponse {}
 
+export interface MsgClaimToken {
+  creator: string;
+  id: number;
+}
+
+export interface MsgClaimTokenResponse {}
+
 const baseMsgLaunchCampaing: object = {
   creator: "",
   total: "",
@@ -368,13 +375,124 @@ export const MsgPledgeTokenResponse = {
   },
 };
 
+const baseMsgClaimToken: object = { creator: "", id: 0 };
+
+export const MsgClaimToken = {
+  encode(message: MsgClaimToken, writer: Writer = Writer.create()): Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgClaimToken {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgClaimToken } as MsgClaimToken;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.id = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgClaimToken {
+    const message = { ...baseMsgClaimToken } as MsgClaimToken;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
+    } else {
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = Number(object.id);
+    } else {
+      message.id = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgClaimToken): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgClaimToken>): MsgClaimToken {
+    const message = { ...baseMsgClaimToken } as MsgClaimToken;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    } else {
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id;
+    } else {
+      message.id = 0;
+    }
+    return message;
+  },
+};
+
+const baseMsgClaimTokenResponse: object = {};
+
+export const MsgClaimTokenResponse = {
+  encode(_: MsgClaimTokenResponse, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): MsgClaimTokenResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgClaimTokenResponse } as MsgClaimTokenResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgClaimTokenResponse {
+    const message = { ...baseMsgClaimTokenResponse } as MsgClaimTokenResponse;
+    return message;
+  },
+
+  toJSON(_: MsgClaimTokenResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial(_: DeepPartial<MsgClaimTokenResponse>): MsgClaimTokenResponse {
+    const message = { ...baseMsgClaimTokenResponse } as MsgClaimTokenResponse;
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   LaunchCampaing(
     request: MsgLaunchCampaing
   ): Promise<MsgLaunchCampaingResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   PledgeToken(request: MsgPledgeToken): Promise<MsgPledgeTokenResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -405,6 +523,18 @@ export class MsgClientImpl implements Msg {
     );
     return promise.then((data) =>
       MsgPledgeTokenResponse.decode(new Reader(data))
+    );
+  }
+
+  ClaimToken(request: MsgClaimToken): Promise<MsgClaimTokenResponse> {
+    const data = MsgClaimToken.encode(request).finish();
+    const promise = this.rpc.request(
+      "cosmonaut.crowdfund.crowdfund.Msg",
+      "ClaimToken",
+      data
+    );
+    return promise.then((data) =>
+      MsgClaimTokenResponse.decode(new Reader(data))
     );
   }
 }
