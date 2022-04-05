@@ -40,6 +40,10 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgWithdrawPledge int = 100
 
+	opWeightMsgCancelCampaign = "op_weight_msg_create_chain"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCancelCampaign int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -115,6 +119,17 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgWithdrawPledge,
 		crowdfundsimulation.SimulateMsgWithdrawPledge(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgCancelCampaign int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCancelCampaign, &weightMsgCancelCampaign, nil,
+		func(_ *rand.Rand) {
+			weightMsgCancelCampaign = defaultWeightMsgCancelCampaign
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCancelCampaign,
+		crowdfundsimulation.SimulateMsgCancelCampaign(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

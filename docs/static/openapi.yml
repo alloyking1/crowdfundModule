@@ -12829,6 +12829,8 @@ definitions:
         type: object
         additionalProperties:
           type: string
+  cosmonaut.crowdfund.crowdfund.MsgCancelCampaignResponse:
+    type: object
   cosmonaut.crowdfund.crowdfund.MsgClaimTokenResponse:
     type: object
   cosmonaut.crowdfund.crowdfund.MsgLaunchCampaingResponse:

@@ -34,6 +34,7 @@ func GetTxCmd() *cobra.Command {
 	cmd.AddCommand(CmdPledgeToken())
 	cmd.AddCommand(CmdClaimToken())
 	cmd.AddCommand(CmdWithdrawPledge())
+	cmd.AddCommand(CmdCancelCampaign())
 	// this line is used by starport scaffolding # 1
 
 	return cmd
