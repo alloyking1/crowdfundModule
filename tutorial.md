@@ -1,4 +1,4 @@
-#Crowdfunding Module
+# Crowdfunding Module
 
 The acceptance of blockchain technology and decentralized finance (Defi) has grown recently because of the impact Defi has made in solving many problems faced in the financial industry and beyond.
 
@@ -22,9 +22,9 @@ By the end of this section, you should be able to do the following using Starpor
 
 > Note: This tutorial is solely for educational purposes. You should study this and build your unique solution but do not use this code in production.
 
-##Module Overview
+## Module Overview
 
-###The Campaign
+### The Campaign
 
 The campaign has the following attributes:
 
@@ -42,17 +42,17 @@ There are two parties involved in the campaign:
 - `campaign owner`
 - `pledger`
 
-###Campaign owner
+### Campaign owner
 
 The campaign owner is the user that starts a crowdfunding campaign to raise a total sum in SDK coins. The process requires the creator to make the first donation to the campaign.
 
-###Pledger
+### Pledger
 
 The pledger is a user that pledges SDK coins to support the campaign
 
 Now you have an idea of the app, let us get started.
 
-##Scaffold the Blockchain
+## Scaffold the Blockchain
 
 The first step in building the module is to scaffold the blockchain. You can scaffold a fully functional Cosmos SDK blockchain using the command below
 
@@ -60,7 +60,7 @@ The first step in building the module is to scaffold the blockchain. You can sca
 
 The `--no-module` flag added to the starport command instructs starport not to create the blockchain along with a module. We will scaffold a Crowdfunding module in the next section.
 
-##Scaffold the Module
+## Scaffold the Module
 
 Next, scaffold a Crowdfunding module using the commands below.
 You first need to navigate into the newly created project folder directory like this
@@ -74,7 +74,7 @@ In the `crowdfund` directory, create a new module using the following command
 Modules are stored in the `x/` folder directory in starport applications. You can find our module in this directory once the scaffolding process is completed.
 The `--deep bank` flag installs dependencies necessary for your module to communicate with the Cosmos SDK bank module.
 
-##Scaffold campaign list
+## Scaffold campaign list
 
 We will store our newly created module in an array-like data structure. To achieve this, let us scaffold the necessary code using the command below
 
@@ -95,7 +95,7 @@ Once the scaffolding is completed. Navigate to `proto/crowdfund.proto` file. Upd
 
 The code we added above modifies the `pledger` data type from `string` to `map`.
 
-##Create messages
+## Create messages
 
 The following messages are needed to implement the functionalities of the module.
 
@@ -104,7 +104,7 @@ The following messages are needed to implement the functionalities of the module
     - Claim token message
     - Cancel campaign message
 
-###Launch Campaign Message
+### Launch Campaign Message
 
 This message enables the user to launch a campaign requesting donations. The message should have the following fields
 
@@ -133,7 +133,7 @@ The logic of the message will be implement in `x/crowdfund/keeper/msg_server_lau
     func (k msgServer) LaunchCampaing(goCtx context.Context, msg *types.MsgLaunchCampaing) (*types.MsgLaunchCampaingResponse, error) {
         ctx := sdk.UnwrapSDKContext(goCtx)
 
-        //create a new campaing
+        []: # (create a new campaign)
         var crowdfund = types.Crowdfund{
             Total:    msg.Total,
             Amount:   msg.Amount,
@@ -143,19 +143,18 @@ The logic of the message will be implement in `x/crowdfund/keeper/msg_server_lau
             State:    "in-progress",
         }
 
-        //get the campaing owner address
+        []: # (get the campaign owner address)
         owner, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-        //get the module account address
+        []: # (get the module account address)
         moduleAcc := sdk.AccAddress(crypto.AddressHash([]byte(types.ModuleName)))
 
-        //get owner initial deposit to start the campaing
+        get the module account address
         amount, err := sdk.ParseCoinsNormalized(crowdfund.Amount)
         if err != nil {
             panic(err)
         }
 
-        //send coin from campaing creator to Escrow module account
         sdkError := k.bankKeeper.SendCoins(ctx, owner, moduleAcc, amount)
         if sdkError != nil {
             return nil, sdkError
@@ -221,7 +220,7 @@ Let us proceed to the next message. Before that, it is best practice to use git.
     git add .
     git commit -m "launch campaing message added"
 
-###Pledge Token Message
+### Pledge Token Message
 
 This message enables other users to pledge their tokens to the campaign. It needs the campaign `id` and the `amount` the user wants to pledge.
 
@@ -249,46 +248,35 @@ The logic for the `pledge-token` message will be implemented in `x/crowdfund/kee
     func (k msgServer) PledgeToken(goCtx context.Context, msg *types.MsgPledgeToken) (*types.MsgPledgeTokenResponse, error) {
         ctx := sdk.UnwrapSDKContext(goCtx)
 
-        //connect to the launch crowdfund module
         crowdfund, found := k.GetCrowdfund(ctx, msg.Id)
         if !found {
             return nil, sdkerrors.Wrapf(sdkerrors.ErrKeyNotFound, "key %d doesn't exist", msg.Id)
         }
 
-        // check that the crowdfund is in-progress
         if crowdfund.State != "in-progress" {
             return nil, sdkerrors.Wrapf(types.ErrWrongCrowdfundState, "%v", crowdfund.State)
         }
 
-        // get address of pledger
         pledger, _ := sdk.AccAddressFromBech32(msg.Creator)
-        //get amount and convert from string to sdk token
         amount, err := sdk.ParseCoinsNormalized(msg.Amount)
         if err != nil {
             panic(err)
         }
 
-        // get module address
         moduleAcc := sdk.AccAddress(crypto.AddressHash([]byte(types.ModuleName)))
-        // send token to module escrow account
         sdkError := k.bankKeeper.SendCoins(ctx, pledger, moduleAcc, amount)
         if sdkError != nil {
             return nil, sdkError
         }
 
-        // get balance of module escrow wallet
         newModuleBalance := k.bankKeeper.GetBalance(ctx, moduleAcc, "token")
 
-        //update pledger details
-        // make a pair of the pledger and amount
         pledgerPair := make(map[string]string)
         pledgerPair[msg.Creator] = amount.String()
 
-        // update the campaing amount and pledger fields
         crowdfund.Pledger = pledgerPair
         crowdfund.Amount = newModuleBalance.String()
 
-        //update the store
         k.SetCrowdfund(ctx, crowdfund)
         return &types.MsgPledgeTokenResponse{}, nil
     }
@@ -349,7 +337,7 @@ Good job! Remember to commit your changes to git using the command
     git add .
     git commit -m"pledge token messae added"
 
-###Claim Token Message
+### Claim Token Message
 
 This message enables the campaign creator claim the tokens raised to the campaign. It needs the campaign `id` .
 
@@ -377,24 +365,20 @@ The logic for the `pledge-token` message will be implemented in `x/crowdfund/kee
     func (k msgServer) ClaimToken(goCtx context.Context, msg *types.MsgClaimToken) (*types.MsgClaimTokenResponse, error) {
         ctx := sdk.UnwrapSDKContext(goCtx)
 
-        //connect to crowdfund module
         crowdfund, found := k.GetCrowdfund(ctx, msg.Id)
         if !found {
             return nil, sdkerrors.Wrapf(sdkerrors.ErrKeyNotFound, "key %d doesn't exist", msg.Id)
         }
 
-        // check that the crowdfund is in-progress
         if crowdfund.State != "in-progress" {
             return nil, sdkerrors.Wrapf(types.ErrWrongCrowdfundState, "%v", crowdfund.State)
         }
 
-        //check that the request is coming from owner
         requester, _ := sdk.AccAddressFromBech32(msg.Creator)
         if requester.String() != crowdfund.Owner {
             return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "Cannot claim funds: not the campaing creator")
         }
 
-        // check that deadline is reached
         deadline, err := strconv.ParseInt(crowdfund.Deadline, 10, 64)
         if err != nil {
             panic(err)
@@ -403,23 +387,19 @@ The logic for the `pledge-token` message will be implemented in `x/crowdfund/kee
             return nil, sdkerrors.Wrap(types.ErrDeadline, "Cannot claim funds before deadline")
         }
 
-        // check that goal was met
         if crowdfund.Amount == crowdfund.Total {
 
-            //get the module account address
             moduleAcc := sdk.AccAddress(crypto.AddressHash([]byte(types.ModuleName)))
             amount, err := sdk.ParseCoinsNormalized(crowdfund.Amount)
             if err != nil {
                 panic(err)
             }
 
-            // send coins
             sdkError := k.bankKeeper.SendCoins(ctx, moduleAcc, requester, amount)
             if sdkError != nil {
                 return nil, sdkError
             }
 
-            // update state
             crowdfund.State = "completed"
         } else {
 
@@ -486,7 +466,7 @@ Commit changes to git
     git add .
     git commit -m "claim token message created"
 
-###Withdraw Pledge
+### Withdraw Pledge
 
 This message enables pledgers to withdraw their pledge if the campaign goal was not met. It needs the campaign `id` .
 
@@ -514,18 +494,15 @@ The logic for the `withdraw-pledge` message will be implemented in `x/crowdfund/
     func (k msgServer) WithdrawPledge(goCtx context.Context, msg *types.MsgWithdrawPledge) (*types.MsgWithdrawPledgeResponse, error) {
         ctx := sdk.UnwrapSDKContext(goCtx)
 
-        // connect to module
         crowdfund, found := k.GetCrowdfund(ctx, msg.Id)
         if !found {
             return nil, sdkerrors.Wrapf(sdkerrors.ErrKeyNotFound, "key %d doesn't exist", msg.Id)
         }
 
-        // check that state
         if crowdfund.State != "in-progress" {
             return nil, sdkerrors.Wrapf(types.ErrWrongCrowdfundState, "%v", crowdfund.State)
         }
 
-        // check dead-line
         deadline, err := strconv.ParseInt(crowdfund.Deadline, 10, 64)
         if err != nil {
             panic(err)
@@ -534,39 +511,29 @@ The logic for the `withdraw-pledge` message will be implemented in `x/crowdfund/
             return nil, sdkerrors.Wrap(types.ErrDeadline, "Cannot claim funds before deadline")
         }
 
-        // check if goal status
         if crowdfund.Amount != crowdfund.Total {
-            //get the module account address
             moduleAcc := sdk.AccAddress(crypto.AddressHash([]byte(types.ModuleName)))
-            // get amount of coin user pledged
             amount, err := sdk.ParseCoinsNormalized(crowdfund.Pledger[msg.Creator])
-            // amount, err := sdk.ParseCoinNormalized(msg.Amount)
             if err != nil {
                 panic(err)
             }
 
-            // get address of pledger
             pledger, _ := sdk.AccAddressFromBech32(msg.Creator)
 
-            // send fund
             sdkError := k.bankKeeper.SendCoins(ctx, moduleAcc, pledger, amount)
             if sdkError != nil {
                 return nil, sdkError
             }
 
-            // update amount
             newModuleBalance := k.bankKeeper.GetBalance(ctx, moduleAcc, "token")
             crowdfund.Amount = newModuleBalance.String()
 
-            // delete pledger
             delete(crowdfund.Pledger, msg.Creator)
 
-            // update state
             crowdfund.State = "refund"
 
         } else {
 
-            // throw error
             return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "Cannot claim funds: campaing goal was met")
         }
 
@@ -593,13 +560,13 @@ List crowdfund to see our pledge
 Outputted result
 
     Crowdfund:
-    - amount: 40token  //total pledged amount
+    - amount: 40token
       deadline: "200"
       fee: 2token
       id: "0"
       owner: cosmos1n64fs93zfzessunpnkj2se3xkl7phsr49lfnxp
       pledger:
-        cosmos1zgz2vtuc83x0dxl9pd447r64rwz8zw9q97ucap: 20token  //pledger and amount map
+        cosmos1zgz2vtuc83x0dxl9pd447r64rwz8zw9q97ucap: 20token
       state: in-progress
       total: 100token
     pagination:
@@ -616,12 +583,12 @@ Verify refund of pledge
 
 
     Crowdfund:
-    - amount: 20token    //new escrow wallet balance
+    - amount: 20token
       deadline: "200"
       fee: 2token
       id: "0"
       owner: cosmos1n64fs93zfzessunpnkj2se3xkl7phsr49lfnxp
-      pledger: {}       //pledger and amount deleted
+      pledger: {}
       state: refund
       total: 100token
     pagination:
@@ -637,7 +604,7 @@ Commit changes to git
     git add .
     git commit -m"pledger refund message created"
 
-###Cancel Campaign Message
+### Cancel Campaign Message
 
 This message deletes a campaign with no pledge or sets its state to cancel if there are pledges. It needs the campaign `id`.
 
@@ -664,13 +631,11 @@ The logic for the `cancel-pledge` message will be implemented in `x/crowdfund/ke
     func (k msgServer) CancelCampaign(goCtx context.Context, msg *types.MsgCancelCampaign) (*types.MsgCancelCampaignResponse, error) {
         ctx := sdk.UnwrapSDKContext(goCtx)
 
-        // get access to launch campaing module
         crowdfund, found := k.GetCrowdfund(ctx, msg.Id)
         if !found {
             return nil, sdkerrors.Wrapf(sdkerrors.ErrKeyNotFound, "key %d doesn't exist", msg.Id)
         }
 
-        //check requester
         requester, _ := sdk.AccAddressFromBech32(msg.Creator)
         if requester.String() != crowdfund.Owner {
             return nil, sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "Cannot claim funds: not the campaing creator")
@@ -679,8 +644,6 @@ The logic for the `cancel-pledge` message will be implemented in `x/crowdfund/ke
         pledger := crowdfund.Pledger
         if pledger == nil {
 
-            // return creator amount
-            //get the module account address
             moduleAcc := sdk.AccAddress(crypto.AddressHash([]byte(types.ModuleName)))
             amount, err := sdk.ParseCoinsNormalized(crowdfund.Amount)
             if err != nil {
@@ -692,17 +655,15 @@ The logic for the `cancel-pledge` message will be implemented in `x/crowdfund/ke
                 return nil, sdkError
             }
 
-            //delete campaing
             k.RemoveCrowdfund(ctx, msg.Id)
         } else {
-            //set state of campaign to cancelled
             crowdfund.State = "cancelled"
         }
 
         return &types.MsgCancelCampaignResponse{}, nil
     }
 
-##Summary
+## Summary
 
 Great job. You have completed the Crowdfunding tutorial.
 You implemented the following:
