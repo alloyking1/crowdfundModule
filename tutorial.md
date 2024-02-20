@@ -177,10 +177,8 @@ To use `SendCoins()`, you need to modify `x/crowdfund/types/expected_keepers.go`
         "github.com/cosmos/cosmos-sdk/x/auth/types"
     )
     ...
-    // BankKeeper defines the expected interface needed to retrieve account balances.
     type BankKeeper interface {
         ...
-        // Methods imported from bank should be defined here
         SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
     }
 
@@ -284,17 +282,14 @@ The logic for the `pledge-token` message will be implemented in `x/crowdfund/kee
 You need to update the `x/crowdfund/types/expected_keepers.go` file once again with the following
 
     ...
-    // BankKeeper defines the expected interface needed to retrieve account balances.
     type BankKeeper interface {
         ...
-        // module to check account balance
         GetBalance(ctx sdk.Context, addr sdk.AccAddress, denom string) sdk.Coin
     }
 
 You also need to add `ErrWrongCrowdfundState` to `x/crowdfund/types/errors.go` file.
 
       ....
-    // x/crowdfund module sentinel errors
     var (
           ....
         ErrWrongCrowdfundState = sdkerrors.Register(ModuleName, 1, "wrong campaing state")
@@ -319,7 +314,7 @@ Verify that the `pledge-token` transaction was successful
 The `pledger` was updated with the `wallet address` and `amount` map of the user
 
     Crowdfund:
-    - amount: 80token  //amount updated
+    - amount: 80token
       deadline: "200"
       fee: 2token
       id: "0"
@@ -414,8 +409,6 @@ The logic for the `pledge-token` message will be implemented in `x/crowdfund/kee
 Register `ErrDeadline` by update the `x/crowdfund/types/errors.go` file in this manner
 
     ....
-
-    // x/crowdfund module sentinel errors
     var (
         ...
         ErrDeadline = sdkerrors.Register(ModuleName, 2, "deadline")
